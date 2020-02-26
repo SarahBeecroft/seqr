@@ -12,8 +12,13 @@ We appreciate modifications that add support for other platforms.
     
 
 #### Step 1: Install dependencies
+Do:
+```
+cd /data
+mkdir seqr
+```
 
-cd to the directory where you want to install seqr, and run: 
+then run:
 
 ```
 SCRIPT=install_general_dependencies.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && ./$SCRIPT
