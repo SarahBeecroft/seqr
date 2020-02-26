@@ -67,7 +67,7 @@ cd ${SEQR_DIR}; python manage.py createsuperuser
 
 A project in seqr represents a group of collaborators working together on one or more datasets.
 
-1. Open your browser to [http://localhost:8000/login](http://localhost:8000/login)
+1. Open your browser to [http://localhost:8000/login](http://localhost:8000/login) or [http://146.118.65.188:8000/login]
 2. Login using the account you entered in step 3. 
 3. On the dashboard page, click on "Create Project".  
 4. Click on the new project.
