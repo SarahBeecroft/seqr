@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=6.4.0
+VERSION=7.6.0
 
 set +x
 set +x
@@ -9,10 +9,10 @@ echo "==== Install and start elasticsearch ====="
 echo
 set -x
 
-wget -nv http://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${VERSION}.tar.gz
-tar xzf elasticsearch-${VERSION}.tar.gz
-rm elasticsearch-${VERSION}.tar.gz
-
+cd ${SEQR_DIR}
+wget -nv https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${VERSION}-linux-x86_64.tar.gz
+tar xzf elasticsearch-${VERSION}-linux-x86_64.tar.gz
+rm elasticsearch-${VERSION}-linux-x86_64.tar.gz
 cd elasticsearch-${VERSION}
 
 echo '
