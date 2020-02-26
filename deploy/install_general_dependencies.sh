@@ -28,7 +28,7 @@ fi
 
 if [ -z "$SEQR_DIR"  ]; then
 
-    export SEQR_DIR=$(pwd)/seqr
+    export SEQR_DIR=/data/seqr
     export SEQR_BIN_DIR=${SEQR_DIR}/../bin
     cat <(echo 'export SEQR_DIR='${SEQR_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
     cat <(echo 'export SEQR_BIN_DIR='${SEQR_BIN_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
@@ -197,7 +197,7 @@ set -x
 
 export SEQR_BRANCH=master
 
-git clone --recursive https://github.com/macarthur-lab/seqr.git
+git clone --recursive https://github.com/SarahBeecroft/seqr.git
 cd seqr/
 git checkout $SEQR_BRANCH
 cd ..
