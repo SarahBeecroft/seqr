@@ -112,9 +112,10 @@ rm ${REFERENCE_DATA_BACKUP_FILE}
 # start gunicorn server
 GUNICORN_WORKER_THREADS=4
 
-echo 'cd '${SEQR_DIR}'/seqr_settings
+echo '
+SETTINGS_DIR='${SEQR_DIR}'/seqr_settings
 
-LOG_FILE=$(pwd)/gunicorn.log
+LOG_FILE=${SETTINGS_DIR}/gunicorn.log
 nohup gunicorn -w '${GUNICORN_WORKER_THREADS}' -c gunicorn_config.py wsgi:application --bind 0.0.0.0:8000 >& ${LOG_FILE} &
 echo "gunicorn started in background. See ${LOG_FILE}"
 ' > start_server.sh
