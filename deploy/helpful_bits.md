@@ -9,3 +9,8 @@ kill gunicorn with django
 ```
 pkill gunicorn
 ```
+what ports are running/being used?
+
+```
+netstat -natp
+```
