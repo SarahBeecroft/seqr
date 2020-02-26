@@ -15,7 +15,7 @@ SPARK_VERSION="spark-2.0.2-bin-hadoop2.7"
 cd ${SEQR_BIN_DIR} \
     && wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz \
     && tar xzf ${SPARK_VERSION}.tgz
-#    && rm spark-2.0.2-bin-hadoop2.7.tgz
+    && rm spark-2.0.2-bin-hadoop2.7.tgz
 
 export SPARK_HOME=${SEQR_BIN_DIR}'/'${SPARK_VERSION}
 echo 'export SPARK_HOME='${SPARK_HOME} >> ~/.bashrc
@@ -86,11 +86,11 @@ if [ ! -f /vep/1var.vcf ]; then
 
     # (re)create the fasta index VEP uses
     rm /vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.index
-    /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
+    bash /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
 
     # (re)create the fasta index VEP uses
     rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
-    /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
+    bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
 fi
 
 
