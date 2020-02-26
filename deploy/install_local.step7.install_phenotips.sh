@@ -13,6 +13,8 @@ echo "==== Installing Phenotips ===="
 echo
 set -x
 
+cd ${SEQR_DIR}
+
 export PT_VERSION="1.2.6"
 wget -nv https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/${PT_VERSION}/phenotips-standalone-${PT_VERSION}.zip \
     && unzip -o phenotips-standalone-${PT_VERSION}.zip \
