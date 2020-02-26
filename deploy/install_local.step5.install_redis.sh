@@ -7,6 +7,7 @@ echo "==== Installing redis ===="
 echo
 set -x
 
+cd ${SEQR_DIR}
 wget -nv http://download.redis.io/redis-stable.tar.gz
 
 tar xvzf redis-stable.tar.gz
