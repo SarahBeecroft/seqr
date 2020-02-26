@@ -16,7 +16,7 @@ cd ${SEQR_BIN_DIR} \
     && wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz && tar xzf ${SPARK_VERSION}.tgz && rm ${SPARK_VERSION}.tgz
 
 export SPARK_HOME=${SEQR_BIN_DIR}'/'${SPARK_VERSION}
-echo 'export SPARK_HOME='${SPARK_HOME} >> ~/.bashrc
+sudo echo 'export SPARK_HOME='${SPARK_HOME} >> ~/.bashrc
 
 set +x
 echo
