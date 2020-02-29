@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 cd ${SEQR_DIR}/phenotips-standalone-1.2.6
 
