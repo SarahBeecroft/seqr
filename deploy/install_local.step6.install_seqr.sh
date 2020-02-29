@@ -52,9 +52,10 @@ wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
 cd ${SEQR_DIR}/
 git pull
 mkdir seqr_settings
-cp deploy/docker/seqr/config/gunicorn_config.py seqr_settings/
+cp seqr/deploy/docker/seqr/config/gunicorn_config.py seqr_settings/
 
 # install python dependencies
+cd seqr
 sudo $(which pip) install --upgrade --ignore-installed -r requirements.txt
 
 # init seqr db
