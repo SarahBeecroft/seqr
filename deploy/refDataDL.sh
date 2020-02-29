@@ -142,7 +142,7 @@ gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
 cd ${SEQR_INSTALL_DIR}/data/reference_data
 mkdir loftee_data_grch37 loftee_data_grch38 homo_sapiens
 gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data ${SEQR_INSTALL_DIR}/data/reference_data/loftee_data_grch37
-gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data ${SEQR_INSTALL_DIR}/data/reference_data/oftee_data_grch38
+gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data ${SEQR_INSTALL_DIR}/data/reference_data/loftee_data_grch38
 gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 ${SEQR_INSTALL_DIR}/data/reference_data/homo_sapiens
 gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 ${SEQR_INSTALL_DIR}/data/reference_data/homo_sapiens
 
