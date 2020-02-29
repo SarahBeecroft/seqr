@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#! /usr/bin/env bash
 
 set +x
 echo ==== Adjust system settings for elasticsearch =====
