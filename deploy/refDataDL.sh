@@ -139,20 +139,18 @@ gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
     && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip ${SEQR_BIN_DIR}/htsfile ${SEQR_BIN_DIR}/samtools
 
 
-if [ "$needs_reboot" ] ; then
+cd ${SEQR_INSTALL_HOME}/data/reference_data
+[ ! -d /vep/loftee_data_grch37/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data ${SEQR_INSTALL_HOME}/data/reference_data/loftee_data_grch37
+[ ! -d /vep/loftee_data_grch38/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data l${SEQR_INSTALL_HOME}/data/reference_data/oftee_data_grch38
+[ ! -d /vep/homo_sapiens/85_GRCh37 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 ${SEQR_INSTALL_HOME}/data/reference_data/homo_sapiens
+[ ! -d /vep/homo_sapiens/85_GRCh38 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 ${SEQR_INSTALL_HOME}/data/reference_data/homo_sapiens
 
-  echo '
-  ==================================================================
-  Config changes above will take effect after a reboot.
-  ==================================================================
-'
-    read -p "Reboot now? [y/n] " -n 1 -r
-    echo    # (optional) move to a new line
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        echo "Shutting down..."
-        sudo reboot
-    else
-        echo "Skipping reboot."
-    fi
+#if [ ! -f /vep/variant_effect_predictor ]; then
+#    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
+#    gsutil -m cp -n -r gs://hail-common/vep/vep/Plugins /vep
+#    ln -s /vep/ensembl-tools-release-85/scripts/variant_effect_predictor /vep/variant_effect_predictor
+#fi
+
+if [ ! -f /vep/1var.vcf ]; then
+    git clone https://github.com/konradjk/loftee.git .
 fi
