@@ -139,11 +139,12 @@ gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
     && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip ${SEQR_BIN_DIR}/htsfile ${SEQR_BIN_DIR}/samtools
 
 
-cd ${SEQR_INSTALL_HOME}/data/reference_data
-[ ! -d /vep/loftee_data_grch37/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data ${SEQR_INSTALL_HOME}/data/reference_data/loftee_data_grch37
-[ ! -d /vep/loftee_data_grch38/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data l${SEQR_INSTALL_HOME}/data/reference_data/oftee_data_grch38
-[ ! -d /vep/homo_sapiens/85_GRCh37 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 ${SEQR_INSTALL_HOME}/data/reference_data/homo_sapiens
-[ ! -d /vep/homo_sapiens/85_GRCh38 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 ${SEQR_INSTALL_HOME}/data/reference_data/homo_sapiens
+cd ${SEQR_INSTALL_DIR}/data/reference_data
+mkdir loftee_data_grch37 loftee_data_grch38 homo_sapiens
+gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data ${SEQR_INSTALL_DIR}/data/reference_data/loftee_data_grch37
+gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data ${SEQR_INSTALL_DIR}/data/reference_data/oftee_data_grch38
+gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 ${SEQR_INSTALL_DIR}/data/reference_data/homo_sapiens
+gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 ${SEQR_INSTALL_DIR}/data/reference_data/homo_sapiens
 
 #if [ ! -f /vep/variant_effect_predictor ]; then
 #    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
