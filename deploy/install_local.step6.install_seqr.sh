@@ -26,52 +26,19 @@ echo "==== Installing seqr ===="
 echo
 set -x
 
-if [ -z "$PLATFORM" ]; then
-    set +x
-    echo "PLATFORM environment variable not set. Please run previous install step(s)."
-    exit 1
+# install dependencies of the HaploPainter.pl script used to generate static pedigree images
+sudo apt-get install -y \
+build-essential \
+libcairo2-dev \
+libglib2.0-bin \
+libglib2.0-0 \
+libgtk2.0-dev \
+libpango1.0-dev
 
-elif [ $PLATFORM = "macos" ]; then
-
-    brew install ssl
-    cat <(echo "export PATH=/usr/local/opt/openssl/bin:$PATH") ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
-
-elif [ $PLATFORM = "centos" ]; then
-
-    sudo yum install -y \
-        cairo \
-        cairo-devel \
-        glib2 \
-        glib2-devel \
-        pango \
-        pango-devel \
-        gtk2
-
-    sudo apt-get update \
-        && curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash - \
-        && sudo yum -y install nodejs
-
-elif [ $PLATFORM = "ubuntu" ]; then
-
-    # install dependencies of the HaploPainter.pl script used to generate static pedigree images
-    sudo apt-get install -y \
-        build-essential \
-        libcairo2-dev \
-        libglib2.0-bin \
-        libglib2.0-0 \
-        libgtk2.0-dev \
-        libpango1.0-dev
-
-    sudo apt-get update \
-        && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-        && sudo apt-get install -y \
-              nodejs
-
-else
-    set +x
-    echo "Unexpected operating system: $PLATFORM"
-    exit 1
-fi;
+sudo apt-get update \
+  && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && sudo apt-get install -y \
+    nodejs
 
 wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
     && chmod +x ./cpanm \
