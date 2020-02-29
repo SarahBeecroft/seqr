@@ -9,7 +9,7 @@ If you are using a Nimbus VM, you will need to login into the openstack web inte
 Specs: ingress, IPv4, TCP, 8000 or 8080 or 27017, 0.0.0.0/0 
 
 
-#Getting started
+# Getting started
 Update and upgrade apt-get:
 
     sudo apt-get update
@@ -37,11 +37,11 @@ Create an bash variable or alias and add it to `~/.bash_rc` and run `source ~/.b
     sudo nano ~/.bashrc #add the above lines
     source ~/.bashrc
 
-#Make background changes and download seqr repo
+# Make background changes and download seqr repo
 
     SCRIPT=seqr_dependencies.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && ./$SCRIPT
 
-#Install seqr's python dependencies
+# Install seqr's python dependencies
 
     cd ${SEQR_DIR}
     sudo apt-get install python-psycopg2
@@ -49,17 +49,17 @@ Create an bash variable or alias and add it to `~/.bash_rc` and run `source ~/.b
     sudo apt remove python-psycopg2
     sudo -H pip install -r seqr/requirements.txt
 
-#Install tabix 
+# Install tabix 
 not strictly needed, but useful to have. Optional.
 
     sudo apt-get install tabix
 
-#Install MongoDB
+# Install MongoDB
 
     sudo apt-get install mongodb
     mongo # to test if it works, Ctr+D to quit
 
-#Install Postgres 
+# Install Postgres 
 Instructions on how to install postgres on Ubuntu 16.04
 
     sudo apt-get install postgresql postgresql-contrib
@@ -90,14 +90,14 @@ Restart the service, create a seqr database and test out a connection to the pos
 
 db will be created in later step via install_local.step6.install_seqr.sh
 
-#Install Oracle Java Development kit 8 (JDK v1.8)
+# Install Oracle Java Development kit 8 (JDK v1.8)
 
 Install the official Oracle Java Development kit 8 (JDK v1.8) for PhenoTips to work properly. Don't get the java runtime enviornment (JRE), it's not enough.
 
     sudo apt-get update
     sudo apt install openjdk-8-jre
 
-#Install PhenoTips 
+# Install PhenoTips 
 PhenoTips stores structured phenotype information. I installed it to the seqr home directory
 
     cd ${SEQR_DIR}
@@ -125,15 +125,15 @@ note: the below error is benign and phenotips should work regardless
 
     sudo apt autoremove
 
-#create a new django admin user
+# Create a new django admin user
 
     ./${SEQR_DIR}/seqr/manage.py createsuperuser
 
-#Open seqr
+# Open seqr
 Seqr is running on http://<yourIP>:8080
 
 Go to your web browser go to this address. Login with the user ID you just created
 
-#Open phenotips
+# Open phenotips
 
 Phenotips is running on http://<yourIP>:8000
