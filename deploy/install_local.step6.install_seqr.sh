@@ -51,8 +51,7 @@ wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
 
 cd ${SEQR_DIR}/
 git pull
-mkdir seqr_settings
-cp seqr/deploy/docker/seqr/config/gunicorn_config.py seqr_settings/
+cp seqr/deploy/docker/seqr/config/gunicorn_config.py seqr/
 
 # install python dependencies
 cd seqr
@@ -81,7 +80,7 @@ rm ${REFERENCE_DATA_BACKUP_FILE}
 GUNICORN_WORKER_THREADS=4
 
 echo '
-SETTINGS_DIR='${SEQR_DIR}'/seqr_settings
+SETTINGS_DIR='${SEQR_DIR}'/seqr
 
 LOG_FILE=${SETTINGS_DIR}/gunicorn.log
 nohup gunicorn -w '${GUNICORN_WORKER_THREADS}' -c gunicorn_config.py wsgi:application --bind 0.0.0.0:8000 >& ${LOG_FILE} &
