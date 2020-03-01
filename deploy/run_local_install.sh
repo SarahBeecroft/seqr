@@ -262,24 +262,6 @@ if [ ! -f /vep/1var.vcf ]; then
     bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
 fi
 
-#=======Error============#
-##rm: cannot remove '/vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.index': No such file or directory
-#+ bash /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
-#
-#-------------------- EXCEPTION --------------------
-#MSG: ERROR: Specified FASTA file/directory /vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa not found
-#
-#STACK Bio::EnsEMBL::Variation::Utils::FastaSequence::setup_fasta /data/seqr/vep/ensembl-tools-release-85/scripts/variant_effect_predictor/Bio/EnsEMBL/Variation/Utils/FastaSequence.pm:166
-#STACK main::configure /vep/variant_effect_predictor/variant_effect_predictor.pl:831
-#STACK toplevel /vep/variant_effect_predictor/variant_effect_predictor.pl:146
-#Date (localtime)    = Sun Mar  1 08:17:07 2020
-#Ensembl API version = 85
-#---------------------------------------------------
-#+ rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
-#rm: cannot remove '/vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index': No such file or directory
-#+ bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
-
-#
 #==========================================================================================================#
 
 set +x
