@@ -7,12 +7,15 @@ IP_ADDRESS=$(curl ifconfig.me)
 #Install python 2.7: 
 
 sudo apt-get update
+sleep 10
 sudo apt-get install -y python
-
+sleep 10
 #Install python pip and upgrade it
 
-sudo -H apt-get install -y python-pip 
+sudo -H apt-get install -y python-pip
+sleep 10
 sudo -H pip2 install -y --upgrade pip
+sleep 10
 
 #Download the seqr repo
 cd ${SEQR_INSTALL_BASE}
@@ -54,7 +57,7 @@ sudo apt-get install -y tabix
 sudo apt-get install -y mongodb
 
 #Install Postgres 
-sudo apt-get install postgresql postgresql-contrib
+sudo apt-get install -y postgresql postgresql-contrib
 
 #Don't change the password to the postgres user, causes problems
 #Edit /etc/postgresql/<version>/main/pg_hba.conf to change permission settings to make postgres work
