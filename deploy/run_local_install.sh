@@ -13,7 +13,7 @@ sudo apt-get install -y python
 sudo -H apt-get install -y python-pip 
 sudo -H pip2 install -y --upgrade pip
 
-#Git clone the seqr repo
+#Download the seqr repo
 cd ${SEQR_INSTALL_BASE}
 SCRIPT=seqr_dependencies.sh && \
    curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && \
