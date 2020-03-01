@@ -2,6 +2,7 @@
 
 SEQR_INSTALL_BASE='/data'
 SEQR_DIR='/data/seqr'
+IP_ADDRESS=$(curl ifconfig.me)
 
 #Install python 2.7: 
 
@@ -111,3 +112,6 @@ cd ${SEQR_DIR} && SCRIPT=install_local.step1.install_pipeline_runner.sh && curl 
 cd ${SEQR_DIR} && SCRIPT=install_local.step4.kibana.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && ./$SCRIPT
 
 cd ${SEQR_DIR} && SCRIPT=install_local.step5.install_redis.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && ./$SCRIPT
+
+echo "Check that seqr is working by going to http://"$IP_ADDRESS":8000"
+echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
