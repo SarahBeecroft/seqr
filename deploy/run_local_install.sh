@@ -10,9 +10,7 @@ IP_ADDRESS=$(curl ifconfig.me)
 PLATFORM ='ubuntu'
 
 #==========================================================================================================#
-set +x
 echo "==== Clone the seqr repo ====="
-set -x
 
 cd ${SEQR_INSTALL_BASE}
 
@@ -36,9 +34,7 @@ cat <(echo 'export SPARK_HOME='${SPARK_HOME}) ~/.bashrc > /tmp/bashrc && mv /tmp
 source ~/.bashrc
 
 #==========================================================================================================#
-set +x
 echo "==== Install seqr dependencies ====="
-set -x
 
 cd ${SEQR_DIR}
 sudo apt-get update
@@ -58,8 +54,6 @@ sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
 
 #============================================================================================================#
-set +x
-set +x
 echo "===== install perl 5.20 ====="
 
 # this is used by the seqr pedigree image-generating script and by the variant effect predictor (VEP) which is run within hail 0.1
@@ -94,18 +88,14 @@ curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && sudo apt-get install -y nodejs
 
 #==========================================================================================================#
-set -x
 echo "===== Install spark ===="
-set -x
 
 cd ${SEQR_BIN_DIR} \
     && wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz \
     && tar xzf ${SPARK_VERSION}.tgz && rm ${SPARK_VERSION}.tgz
 
 #==========================================================================================================#
-set +x
 echo" ==== Install gcloud sdk ====="
-set -x
 
 # copied from https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu
 
@@ -120,14 +110,12 @@ sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
 # make sure crcmod is installed for copying files with gsutil
 sudo apt-get install -y gcc python-dev python-setuptools
-sudo easy_install -U pip
-sudo pip uninstall crcmod
+#sudo easy_install -U pip
+sudo pip uninstall -y crcmod
 sudo pip install -U crcmod
 
 #==========================================================================================================#
-set -x
 echo "===== init gsutil ====="
-set -x
 
 # Add a generic key for accessing public google cloud storage buckets
 # Using a top-level /.config directory so that config files (like core-site.xml) can be shared with the Docker container
@@ -155,9 +143,7 @@ else
 fi
 
 #==========================================================================================================#
-set -x
 echo "===== init utilities ====="
-set -x
 
 # install tabix, bgzip, samtools - which may be needed for VEP and the loading pipeline
 mkdir -p $SEQR_BIN_DIR
@@ -193,11 +179,9 @@ sudo sed -i s/md5/trust/ $PG_HBA_PATH
 sudo service postgresql restart
 
 #===========================================================================================================#
-set +x
 echo
 echo "==== Install data loading pipeline ===="
 echo
-set -x
 ##still buggy
 ##./local_install.sh: line 209: cpanm: command not found
 ##cp: cannot create regular file '/data/seqr/spark-2.0.2-bin-hadoop2.7/jars/': No such file or directory [thought this should be in seqr bin??]
@@ -264,9 +248,7 @@ fi
 
 #==========================================================================================================#
 
-set +x
 echo ==== Adjust system settings for elasticsearch =====
-set -x
 
 # vm.max_map_count needs to be increased on linux for elasticsearch to run. It's not necessary on Mac.
 MAX_MAP_COUNT=$(sysctl -b vm.max_map_count)
@@ -309,12 +291,8 @@ fi
 sudo prlimit --pid $$ --nofile=65536
 
 
-set +x
-
 #==========================================================================================================#
-set +x
 echo "==== Create start_elasticsearch.sh ====="
-set -x
 
 mkdir ${SEQR_DIR}/elasticsearch
 cd ${SEQR_DIR}/elasticsearch
@@ -334,11 +312,9 @@ chmod 777 ./start_elasticsearch.sh
 cd ${SEQR_DIR}
 
 #==========================================================================================================#
-set +x
 echo
 echo "==== Install and start kibana ====="
 echo
-set -x
 
 cd ${SEQR_DIR}
 wget -nv https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
@@ -355,18 +331,14 @@ echo "Kibana started in background. See ${LOG_FILE}"
 
 chmod 777 ./start_kibana.sh
 
-set +x
-
 ./start_kibana.sh
 
 cd ${SEQR_DIR}
 
 #==========================================================================================================#
-set +x
 echo
 echo "==== Installing redis ===="
 echo
-set -x
 
 cd ${SEQR_DIR}
 wget -nv http://download.redis.io/redis-stable.tar.gz
@@ -388,18 +360,14 @@ echo "redis started in background on port 6379. See ${LOG_FILE}"
 
 chmod 777 ./start_redis.sh
 
-set +x
-
 ./start_redis.sh
 
 cd ${SEQR_DIR}
 
 #==========================================================================================================#
-set +x
 echo
 echo "==== Installing PhenoTips ===="
 echo
-set -x
 
 cd ${SEQR_DIR}
 wget https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/1.2.6/phenotips-standalone-1.2.6.zip
@@ -422,11 +390,9 @@ chmod 777 start_phenotips.sh
 ##/data/new_seqr/phenotips-standalone-1.2.6/jetty/work/jetty-0.0.0.0-8080-phenotips-_-any-/xwiki-temp/ontologizer/.cache/.index (No such file or directory)
 
 #==========================================================================================================#
-set -x
 echo
 echo "==== Installing seqr ===="
 echo
-set -x
 
 cd ${SEQR_DIR}/
 git pull
@@ -463,9 +429,7 @@ echo "gunicorn started in background. See ${LOG_FILE}"
 chmod 777 start_server.sh
 
 ./start_server.sh
-set -x
 
 #===========================================================================================================#
 echo "Check that seqr is working by going to http://"$IP_ADDRESS":8000"
 echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
-set -x
