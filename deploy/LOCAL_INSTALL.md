@@ -23,7 +23,7 @@ The run_install_local.sh script should provide full installation of a local seqr
 ```
 cd <location for seqr dir to be created, i.e. /data volume store on nimbus>
 
-SCRIPT=run_local_install.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && ./$SCRIPT
+SCRIPT=run_local_install.sh && curl -L http://raw.githubusercontent.com/SarahBeecroft/seqr/master/deploy/$SCRIPT -o $SCRIPT && chmod 777 $SCRIPT && sudo ./$SCRIPT
 ```
 
 #### Open phenotips
