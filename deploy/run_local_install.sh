@@ -144,7 +144,7 @@ fi
 
 
 # check that gsutil works and is able to access gs://hail-common/
-GSUTIL_TEST="gsutil ls gs://hail-common/vep"
+GSUTIL_TEST="gsutil ls gs://hail-common/"
 $GSUTIL_TEST
 if [ $? -eq 0 ]; then
     echo gsutil works
