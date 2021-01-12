@@ -7,7 +7,7 @@ SPARK_VERSION="spark-2.0.2-bin-hadoop2.7"
 KIBANA_VERSION=7.6.0
 KIBANA_PLATFORM="linux"
 IP_ADDRESS=$(curl ifconfig.me)
-PLATFORM ='ubuntu'
+PLATFORM='ubuntu'
 
 #==========================================================================================================#
 echo "==== Clone the seqr repo ====="
