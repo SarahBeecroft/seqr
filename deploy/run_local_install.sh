@@ -13,6 +13,7 @@ PLATFORM='ubuntu'
 echo "==== Clone the seqr repo ====="
 
 cd ${SEQR_INSTALL_BASE}
+mkdir -p $SEQR_BIN_DIR
 
 export SEQR_BRANCH=master
 
@@ -24,7 +25,7 @@ git checkout $SEQR_BRANCH
 #Create a bash variable, add it to ~/.bash_rc and run source ~/.bashrc
 
 export SEQR_DIR=/data/seqr
-export SEQR_BIN_DIR=${SEQR_DIR}/../bin
+export SEQR_BIN_DIR=${SEQR_DIR}'/../bin'
 export SPARK_HOME=${SEQR_BIN_DIR}'/'${SPARK_VERSION}
 cat <(echo 'export SEQR_DIR='${SEQR_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
 cat <(echo 'export SEQR_BIN_DIR='${SEQR_BIN_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
@@ -148,7 +149,7 @@ fi
 echo "===== init utilities ====="
 
 # install tabix, bgzip, samtools - which may be needed for VEP and the loading pipeline
-mkdir -p $SEQR_BIN_DIR
+#mkdir -p $SEQR_BIN_DIR
 gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
     && gsutil -m cp gs://hail-common/vep/samtools ${SEQR_BIN_DIR}/ \
     && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip \
