@@ -2,7 +2,7 @@
 
 SEQR_INSTALL_BASE='/data'
 SEQR_DIR='/data/seqr'
-SEQR_BIN_DIR='${SEQR_DIR}/../bin'
+SEQR_BIN_DIR=${SEQR_DIR}'/../bin'
 SPARK_VERSION="spark-2.0.2-bin-hadoop2.7"
 KIBANA_VERSION=7.6.0
 KIBANA_PLATFORM="linux"
