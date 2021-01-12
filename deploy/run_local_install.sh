@@ -13,6 +13,7 @@ PLATFORM='ubuntu'
 echo "==== Clone the seqr repo ====="
 
 cd ${SEQR_INSTALL_BASE}
+mkdir $SEQR_BIN_DIR
 
 export SEQR_BRANCH=master
 
@@ -52,6 +53,7 @@ sudo apt-get install -y libpq-dev
 sudo apt remove -y python-psycopg2
 sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
+sudo apt install -y cpanminus
 
 #============================================================================================================#
 echo "===== install perl 5.20 ====="
@@ -75,14 +77,15 @@ sudo apt-get install -y \
     libgtk2.0-dev \
     libpango1.0-dev
 
-wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
-    && chmod +x ./cpanm \
-    && sudo ./cpanm --notest \
-        Cairo \
-        DBI \
-        Gtk2 \
-        Tk \
-        Sort::Naturally
+#wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
+#    && chmod +x ./cpanm \
+#    && 
+sudo cpanm --notest \
+    Cairo \
+    DBI \
+    Gtk2 \
+    Tk \
+    Sort::Naturally
 
 curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && sudo apt-get install -y nodejs
