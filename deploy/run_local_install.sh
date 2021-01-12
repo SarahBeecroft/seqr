@@ -13,7 +13,6 @@ PLATFORM='ubuntu'
 echo "==== Clone the seqr repo ====="
 
 cd ${SEQR_INSTALL_BASE}
-mkdir $SEQR_BIN_DIR
 
 export SEQR_BRANCH=master
 
