@@ -54,6 +54,7 @@ sudo apt remove -y python-psycopg2
 sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
 sudo apt install -y cpanminus
+sudo apt-get install -y nodejs
 
 #============================================================================================================#
 echo "===== install perl 5.20 ====="
@@ -88,8 +89,10 @@ sudo cpanm --notest \
     Tk \
     Sort::Naturally
 
-curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-    && sudo apt-get install -y nodejs
+##This no longer works. I am trying now to use sudo apt-get install nodejs instead, but this gives you the latest version (currently 10).
+#This has been added to the general dependency install section
+#curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+#    && sudo apt-get install -y nodejs
 
 #==========================================================================================================#
 echo "===== Install spark ===="
