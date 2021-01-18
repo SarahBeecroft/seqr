@@ -43,11 +43,11 @@ sudo apt-get install -y unzip wget bzip2     # general utilities
 sudo apt-get install -y git gcc make patch   # general devel. deps.
 sudo apt-get install -y openjdk-8-jdk        # needs this specific java version
 sudo apt-get install -y python
-sudo -H apt-get install -y python-pip
-sudo -H pip2 install --upgrade pip
-sudo -H pip install -r ${SEQR_DIR}/requirements.txt
-sudo $(which pip) install --ignore-installed decorator==4.2.1
-sudo $(which pip) install --upgrade pip jupyter
+sudo -H apt-get install -y python3-pip
+sudo -H pip3 install --upgrade pip
+sudo -H pip3 install -r ${SEQR_DIR}/requirements.txt
+sudo pip3 install --ignore-installed decorator==4.2.1
+sudo pip3 install --upgrade pip jupyter
 sudo apt-get install -y python-psycopg2
 sudo apt-get install -y libpq-dev
 sudo apt remove -y python-psycopg2
@@ -97,9 +97,10 @@ sudo cpanm --notest \
 #==========================================================================================================#
 echo "===== Install spark ===="
 
-cd ${SEQR_BIN_DIR} \
-    && wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz \
-    && tar xzf ${SPARK_VERSION}.tgz && rm ${SPARK_VERSION}.tgz
+cd ${SEQR_BIN_DIR}
+wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz
+tar xzf ${SPARK_VERSION}.tgz
+rm ${SPARK_VERSION}.tgz
 
 #==========================================================================================================#
 echo" ==== Install gcloud sdk ====="
@@ -118,8 +119,8 @@ sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 # make sure crcmod is installed for copying files with gsutil
 sudo apt-get install -y gcc python-dev python-setuptools
 #sudo easy_install -U pip
-sudo pip uninstall -y crcmod
-sudo pip install -U crcmod
+sudo pip3 uninstall -y crcmod
+sudo pip3 install -U crcmod
 
 #==========================================================================================================#
 echo "===== init gsutil ====="
@@ -151,13 +152,13 @@ fi
 
 #==========================================================================================================#
 echo "===== init utilities ====="
-
+#VEP no longer found at this address and needs to be installed manually
 # install tabix, bgzip, samtools - which may be needed for VEP and the loading pipeline
 #mkdir -p $SEQR_BIN_DIR
-gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
-    && gsutil -m cp gs://hail-common/vep/samtools ${SEQR_BIN_DIR}/ \
-    && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip \
-    ${SEQR_BIN_DIR}/htsfile ${SEQR_BIN_DIR}/samtools
+#gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
+#    && gsutil -m cp gs://hail-common/vep/samtools ${SEQR_BIN_DIR}/ \
+#    && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip \
+#    ${SEQR_BIN_DIR}/htsfile ${SEQR_BIN_DIR}/samtools
 
 #==========================================================================================================#
 #Update Postgres pg_hba.conf to change permission settings to make postgres work
@@ -193,8 +194,8 @@ echo
 ##./local_install.sh: line 209: cpanm: command not found
 ##cp: cannot create regular file '/data/seqr/spark-2.0.2-bin-hadoop2.7/jars/': No such file or directory [thought this should be in seqr bin??]
 # download and install VEP - steps based on gs://hail-common/vep/vep/GRCh37/vep85-GRCh37-init.sh and gs://hail-common/vep/vep/GRCh38/vep85-GRCh38-init.sh
-wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm && chmod +x cpanm
-sudo chown -R $USER ~/.cpanm/  # make sure the user owns .cpanm
+#wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm && chmod +x cpanm
+#sudo chown -R $USER ~/.cpanm/  # make sure the user owns .cpanm
 # VEP dependencies
 cpanm --sudo --notest Set::IntervalTree
 cpanm --sudo --notest PerlIO::gzip
@@ -209,14 +210,15 @@ cpanm --sudo --notest List::MoreUtils
 cp ${SEQR_DIR}/hail_elasticsearch_pipelines/hail_builds/v01/gcs-connector-1.6.10-hadoop2.jar ${SPARK_HOME}/jars/
 cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
 
-mkdir -p ${SEQR_DIR}/vep/loftee_data_grch37 ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
-sudo ln -s ${SEQR_DIR}/vep /vep
-sudo chmod -R 777 /vep
+##VEP no longer at this address so this either needs to be fixed or installed manually
+#mkdir -p ${SEQR_DIR}/vep/loftee_data_grch37 ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
+#sudo ln -s ${SEQR_DIR}/vep /vep
+#sudo chmod -R 777 /vep
 
-if [ ! -f /usr/local/bin/perl ]
-then
-    sudo ln -s /usr/bin/perl /usr/local/bin/perl
-fi
+#if [ ! -f /usr/local/bin/perl ]
+#then
+#    sudo ln -s /usr/bin/perl /usr/local/bin/perl
+#fi
 
 # copy large data files
 if [ -f /etc/boto.cfg ]
@@ -225,33 +227,33 @@ then
 fi
 
 
-[ ! -d /vep/loftee_data_grch37/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data /vep/loftee_data_grch37
-[ ! -d /vep/loftee_data_grch38/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data /vep/loftee_data_grch38
-[ ! -d /vep/homo_sapiens/85_GRCh37 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 /vep/homo_sapiens
-[ ! -d /vep/homo_sapiens/85_GRCh38 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 /vep/homo_sapiens
+#[ ! -d /vep/loftee_data_grch37/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data /vep/loftee_data_grch37
+#[ ! -d /vep/loftee_data_grch38/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data /vep/loftee_data_grch38
+#[ ! -d /vep/homo_sapiens/85_GRCh37 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 /vep/homo_sapiens
+#[ ! -d /vep/homo_sapiens/85_GRCh38 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 /vep/homo_sapiens
 
-if [ ! -f /vep/variant_effect_predictor ]; then
-    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
-    gsutil -m cp -n -r gs://hail-common/vep/vep/Plugins /vep
-    ln -s /vep/ensembl-tools-release-85/scripts/variant_effect_predictor /vep/variant_effect_predictor
-fi
+#if [ ! -f /vep/variant_effect_predictor ]; then
+#    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
+#    gsutil -m cp -n -r gs://hail-common/vep/vep/Plugins /vep
+#    ln -s /vep/ensembl-tools-release-85/scripts/variant_effect_predictor /vep/variant_effect_predictor
+#fi
 
-if [ ! -f /vep/1var.vcf ]; then
-    git clone https://github.com/konradjk/loftee.git /vep/loftee
-    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch38.properties /vep/vep-gcloud-grch38.properties
-    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch37.properties /vep/vep-gcloud-grch37.properties
-    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh37_vcf.sh /vep/run_hail_vep85_GRCh37_vcf.sh
-    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh38_vcf.sh /vep/run_hail_vep85_GRCh38_vcf.sh
-    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/1var.vcf /vep/1var.vcf
-
-    # (re)create the fasta index VEP uses
-    rm /vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.index
-    bash /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
+#if [ ! -f /vep/1var.vcf ]; then
+#    git clone https://github.com/konradjk/loftee.git /vep/loftee
+#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch38.properties /vep/vep-gcloud-grch38.properties
+#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch37.properties /vep/vep-gcloud-grch37.properties
+#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh37_vcf.sh /vep/run_hail_vep85_GRCh37_vcf.sh
+#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh38_vcf.sh /vep/run_hail_vep85_GRCh38_vcf.sh
+#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/1var.vcf /vep/1var.vcf
 
     # (re)create the fasta index VEP uses
-    rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
-    bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
-fi
+#    rm /vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.index
+#   bash /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
+
+    # (re)create the fasta index VEP uses
+#    rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
+#    bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
+#fi
 
 #==========================================================================================================#
 
@@ -375,22 +377,22 @@ cd ${SEQR_DIR}
 echo
 echo "==== Installing PhenoTips ===="
 echo
+#THIS download no longer works and needs to be fixed
+#cd ${SEQR_DIR}
+#wget https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/1.2.6/phenotips-standalone-1.2.6.zip
+#unzip phenotips-standalone-1.2.6.zip
+#rm phenotips-standalone-1.2.6.zip
+#cd ${SEQR_DIR}/phenotips-standalone-1.2.6
 
-cd ${SEQR_DIR}
-wget https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/1.2.6/phenotips-standalone-1.2.6.zip
-unzip phenotips-standalone-1.2.6.zip
-rm phenotips-standalone-1.2.6.zip
-cd ${SEQR_DIR}/phenotips-standalone-1.2.6
+#echo 'cd '$(pwd)'
+#LOG_FILE=$(pwd)/phenotips.log
+#(nohup ./start.sh >& ${LOG_FILE}) &
+#echo "PhenoTips started in background on port 8080. See ${LOG_FILE}"
+#' | tee start_phenotips.sh
 
-echo 'cd '$(pwd)'
-LOG_FILE=$(pwd)/phenotips.log
-(nohup ./start.sh >& ${LOG_FILE}) &
-echo "PhenoTips started in background on port 8080. See ${LOG_FILE}"
-' | tee start_phenotips.sh
+#chmod 777 start_phenotips.sh
 
-chmod 777 start_phenotips.sh
-
-./start_phenotips.sh
+#./start_phenotips.sh
 
 #note: the below error is benign and phenotips should work regardless
 ## java.io.FileNotFoundException: 
@@ -439,4 +441,4 @@ chmod 777 start_server.sh
 
 #===========================================================================================================#
 echo "Check that seqr is working by going to http://"$IP_ADDRESS":8000"
-echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
+#echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
