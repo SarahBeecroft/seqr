@@ -42,13 +42,14 @@ sudo apt-get update
 sudo apt-get install -y unzip wget bzip2     # general utilities
 sudo apt-get install -y git gcc make patch   # general devel. deps.
 sudo apt-get install -y openjdk-8-jdk        # needs this specific java version
+sudo snap install google-cloud-sdk --classic
 sudo apt-get install -y python
 sudo -H apt-get install -y python3-pip
 sudo -H pip3 install --upgrade pip
 sudo -H pip3 install -r ${SEQR_DIR}/requirements.txt
 sudo pip3 install --ignore-installed decorator==4.2.1
 sudo pip3 install --upgrade pip jupyter
-sudo apt-get install -y python-psycopg2
+#sudo apt-get install -y python-psycopg2 ##think this is redundant to what is in requirements.txt
 sudo apt-get install -y libpq-dev
 sudo apt remove -y python-psycopg2
 sudo apt-get install -y postgresql postgresql-contrib
