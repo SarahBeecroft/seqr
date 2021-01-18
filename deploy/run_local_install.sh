@@ -219,8 +219,8 @@ cpanm --sudo --notest DBD::SQLite
 cpanm --sudo --notest List::MoreUtils
 
 # install google storage connector which allows hail to access vds's in google buckets without downloading them first
-cp ${SEQR_DIR}/hail_elasticsearch_pipelines/hail_builds/v01/gcs-connector-1.6.10-hadoop2.jar ${SPARK_HOME}/jars/
-cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
+sudo cp ${SEQR_DIR}/hail_elasticsearch_pipelines/hail_builds/v01/gcs-connector-1.6.10-hadoop2.jar ${SPARK_HOME}/jars/
+sudp cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
 
 ##VEP no longer at this address so this either needs to be fixed or installed manually
 #mkdir -p ${SEQR_DIR}/vep/loftee_data_grch37 ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
@@ -269,7 +269,7 @@ fi
 
 #==========================================================================================================#
 
-echo ==== Adjust system settings for elasticsearch =====
+echo "==== Adjust system settings for elasticsearch ====="
 
 # vm.max_map_count needs to be increased on linux for elasticsearch to run. It's not necessary on Mac.
 MAX_MAP_COUNT=$(sysctl -b vm.max_map_count)
@@ -374,8 +374,6 @@ echo "==== Installing redis ===="
 echo
 
 cd ${SEQR_DIR}
-
-
 
 if [[ -d ${SEQR_DIR}/redis ]]
 then
