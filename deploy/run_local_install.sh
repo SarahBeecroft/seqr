@@ -103,7 +103,7 @@ sudo cpanm --notest \
 #==========================================================================================================#
 echo "===== Install spark ===="
 
-if [[ -d ${SPARK_VERSION} ]]
+if [[ -d ${SEQR_BIN_DIR}/${SPARK_VERSION} ]]
 then
     echo 'spark seems to exist already' 
 else
