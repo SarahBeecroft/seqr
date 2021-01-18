@@ -49,9 +49,9 @@ sudo -H pip3 install --upgrade pip
 sudo -H pip3 install -r ${SEQR_DIR}/requirements.txt
 sudo pip3 install --ignore-installed decorator==4.2.1
 sudo pip3 install --upgrade pip jupyter
-#sudo apt-get install -y python-psycopg2 ##think this is redundant to what is in requirements.txt
+#sudo apt-get install -y python-psycopg2 ##think this is redundant to what is in requirements.txt. might have been needed to allow install of libpq-dev on ubuntu 18
 sudo apt-get install -y libpq-dev
-sudo apt remove -y python-psycopg2
+#sudo apt remove -y python-psycopg2
 sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
 sudo apt install -y cpanminus
@@ -63,13 +63,18 @@ echo "===== install perl 5.20 ====="
 # this is used by the seqr pedigree image-generating script and by the variant effect predictor (VEP) which is run within hail 0.1
 # the VEP hail 0.1 integration in particular depends on this specific version of VEP
 
-wget http://www.cpan.org/authors/id/S/SH/SHAY/perl-5.20.3.tar.bz2
-tar xjf perl-5.20.3.tar.bz2
-rm perl-5.20.3.tar.bz2
-cd perl-5.20.3
-./configure.gnu
-make
-sudo make install
+if [[ -d perl-5.20.3 ]]
+then
+    echo 'perl seems to exist already' 
+else
+    wget http://www.cpan.org/authors/id/S/SH/SHAY/perl-5.20.3.tar.bz2
+    tar xjf perl-5.20.3.tar.bz2
+    rm perl-5.20.3.tar.bz2
+    cd perl-5.20.3
+    ./configure.gnu
+    make
+    sudo make install
+fi
 
 # install dependencies of the HaploPainter.pl script used to generate static pedigree images
 sudo apt-get install -y \
@@ -98,11 +103,15 @@ sudo cpanm --notest \
 #==========================================================================================================#
 echo "===== Install spark ===="
 
-cd ${SEQR_BIN_DIR}
-wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz
-tar xzf ${SPARK_VERSION}.tgz
-rm ${SPARK_VERSION}.tgz
-
+if [[ -d ${SPARK_VERSION} ]]
+then
+    echo 'spark seems to exist already' 
+else
+    cd ${SEQR_BIN_DIR}
+    wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz
+    tar xzf ${SPARK_VERSION}.tgz
+    rm ${SPARK_VERSION}.tgz
+fi
 #==========================================================================================================#
 echo" ==== Install gcloud sdk ====="
 
@@ -304,7 +313,13 @@ sudo prlimit --pid $$ --nofile=65536
 #==========================================================================================================#
 echo "==== Create start_elasticsearch.sh ====="
 
-mkdir ${SEQR_DIR}/elasticsearch
+if [[ -d ${SEQR_DIR}/elasticsearch ]]
+then
+    echo 'elasticsearch dir seems to exist already' 
+else
+    mkdir ${SEQR_DIR}/elasticsearch
+fi
+
 cd ${SEQR_DIR}/elasticsearch
 
 echo '
@@ -326,10 +341,16 @@ echo
 echo "==== Install and start kibana ====="
 echo
 
-cd ${SEQR_DIR}
-wget -nv https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
-tar xzf kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
-rm kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
+if [[ -d ${SEQR_DIR}/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64 ]]
+then
+    echo 'kibana dir seems to exist already' 
+else
+    cd ${SEQR_DIR}
+    wget -nv https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
+    tar xzf kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
+    rm kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
+fi
+
 cd ${SEQR_DIR}/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64
 
 echo '
@@ -351,16 +372,21 @@ echo "==== Installing redis ===="
 echo
 
 cd ${SEQR_DIR}
-wget -nv http://download.redis.io/redis-stable.tar.gz
 
-tar xvzf redis-stable.tar.gz
-rm redis-stable.tar.gz
 
-mv redis-stable redis
-cd redis
 
-make
-sudo make install
+if [[ -d ${SEQR_DIR}/redis ]]
+then
+    echo 'redis dir seems to exist already' 
+else
+    wget -nv http://download.redis.io/redis-stable.tar.gz
+    tar xvzf redis-stable.tar.gz
+    rm redis-stable.tar.gz
+    mv redis-stable redis
+    cd redis
+    make
+    sudo make install
+fi
 
 echo 'cd '$(pwd)'
 LOG_FILE=$(pwd)/redis.log
