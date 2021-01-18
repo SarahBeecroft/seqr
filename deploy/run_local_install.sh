@@ -115,7 +115,7 @@ else
     rm ${SPARK_VERSION}.tgz
 fi
 #==========================================================================================================#
-echo" ==== Install gcloud sdk ====="
+echo " ==== Install gcloud sdk ====="
 
 # copied from https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu
 
