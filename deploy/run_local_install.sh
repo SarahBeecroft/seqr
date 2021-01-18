@@ -44,11 +44,12 @@ sudo apt-get install -y git gcc make patch   # general devel. deps.
 sudo apt-get install -y openjdk-8-jdk        # needs this specific java version
 sudo snap install google-cloud-sdk --classic
 sudo apt-get install -y python
-sudo -H apt-get install -y python3-pip
-sudo -H pip3 install --upgrade pip
-sudo -H pip3 install -r ${SEQR_DIR}/requirements.txt
-sudo pip3 install --ignore-installed decorator==4.2.1
-sudo pip3 install --upgrade pip jupyter
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python2.7 get-pip.py
+sudo -H pip2.7 install --upgrade pip
+sudo -H pip2.7 install -r ${SEQR_DIR}/requirements.txt
+sudo pip2.7 install --ignore-installed decorator==4.2.1
+sudo pip2.7 install --upgrade pip jupyter
 #sudo apt-get install -y python-psycopg2 ##think this is redundant to what is in requirements.txt. might have been needed to allow install of libpq-dev on ubuntu 18
 sudo apt-get install -y libpq-dev
 #sudo apt remove -y python-psycopg2
@@ -439,12 +440,12 @@ psql -U postgres postgres -c "create database seqrdb"
 psql -U postgres postgres -c "create database reference_data_db"
 
 # init django
-python3 -u manage.py makemigrations
-python3 -u manage.py migrate
-python3 -u manage.py check
-python3 -u manage.py collectstatic --no-input
-python3 -u manage.py loaddata variant_tag_types
-python3 -u manage.py loaddata variant_searches
+python -u manage.py makemigrations
+python -u manage.py migrate
+python -u manage.py check
+python -u manage.py collectstatic --no-input
+python -u manage.py loaddata variant_tag_types
+python -u manage.py loaddata variant_searches
 
 # download and restore gene reference data
 REFERENCE_DATA_BACKUP_FILE=gene_reference_data_backup.gz
