@@ -108,7 +108,9 @@ then
     echo 'spark seems to exist already' 
 else
     cd ${SEQR_BIN_DIR}
+    echo 'downloading spark'
     wget -nv https://archive.apache.org/dist/spark/spark-2.0.2/${SPARK_VERSION}.tgz
+    echo 'unpacking spark'
     tar xzf ${SPARK_VERSION}.tgz
     rm ${SPARK_VERSION}.tgz
 fi
