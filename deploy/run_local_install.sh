@@ -405,22 +405,26 @@ cd ${SEQR_DIR}
 echo
 echo "==== Installing PhenoTips ===="
 echo
-#THIS download no longer works and needs to be fixed
-#cd ${SEQR_DIR}
-#wget https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/1.2.6/phenotips-standalone-1.2.6.zip
-#unzip phenotips-standalone-1.2.6.zip
-#rm phenotips-standalone-1.2.6.zip
-#cd ${SEQR_DIR}/phenotips-standalone-1.2.6
 
-#echo 'cd '$(pwd)'
-#LOG_FILE=$(pwd)/phenotips.log
-#(nohup ./start.sh >& ${LOG_FILE}) &
-#echo "PhenoTips started in background on port 8080. See ${LOG_FILE}"
-#' | tee start_phenotips.sh
-
-#chmod 777 start_phenotips.sh
-
-#./start_phenotips.sh
+if [[ -d ${SEQR_DIR}/phenotips-standalone-*]]
+then
+    cd ${SEQR_DIR}/phenotips-standalone-*
+    echo 'cd '$(pwd)'
+    LOG_FILE=$(pwd)/phenotips.log
+    (nohup ./start.sh >& ${LOG_FILE}) &
+    echo "PhenoTips started in background on port 8080. See ${LOG_FILE}"
+    ' | tee start_phenotips.sh
+    chmod 777 start_phenotips.sh
+    ./start_phenotips.sh
+else
+    echo '''
+    ***** READ ME *****
+    YOU NEED TO DOWNLOAD PHENOTIPS FROM:
+    https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/ (phenotips-standalone-VER.zip)
+    This should be placed in ${SEQR_DIR}
+    '''
+    exit
+fi
 
 #note: the below error is benign and phenotips should work regardless
 ## java.io.FileNotFoundException: 
