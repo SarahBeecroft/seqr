@@ -3,6 +3,7 @@ This directory contains scripts for installing seqr components on an ubuntu  ser
 Sarah Beecroft 29/2/2020
 These notes are based of those from Brian Uapinyoying 07/26/2018 and the official instructions for installing on a linux machine https://github.com/leklab/broad-software-notes/blob/master/seqr_installation_ubuntu16_vm.md 
 
+see also https://github.com/broadinstitute/seqr/blob/master/deploy/LOCAL_INSTALL.md
 ## A note on ports
 If you are using a Nimbus VM, you will need to login into the openstack web interface, go to security groups, and edit your custom security group. you need to open ports 8000, 8080, and 27017 by adding a custom rule for each. 
 
