@@ -2,7 +2,7 @@
 
 SEQR_INSTALL_BASE='/data'
 SEQR_DIR='/data/seqr'
-SEQR_BIN_DIR=${SEQR_DIR}'/data/seqr/bin'
+SEQR_BIN_DIR='/data/seqr/bin'
 SPARK_VERSION="spark-2.0.2-bin-hadoop2.7"
 KIBANA_VERSION=7.6.0
 KIBANA_PLATFORM="linux"
@@ -13,14 +13,11 @@ PLATFORM='ubuntu'
 echo "==== Clone the seqr repo ====="
 
 cd ${SEQR_INSTALL_BASE}
-mkdir -p $SEQR_BIN_DIR
-
 export SEQR_BRANCH=master
-
 git clone --recursive https://github.com/SarahBeecroft/seqr.git
 cd seqr/
 git checkout $SEQR_BRANCH
-
+mkdir -p $SEQR_BIN_DIR
 #==========================================================================================================#
 #Create a bash variable, add it to ~/.bash_rc and run source ~/.bashrc
 
