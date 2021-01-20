@@ -8,7 +8,7 @@ KIBANA_VERSION=7.6.0
 KIBANA_PLATFORM="linux"
 IP_ADDRESS=$(curl ifconfig.me)
 PLATFORM='ubuntu'
-
+#based partly on https://github.com/leklab/broad-software-notes/blob/ec3f0ade906c4aec067bbf51455b34228d9fd4ae/seqr_installation_ubuntu16_vm.md
 #==========================================================================================================#
 echo "==== Clone the seqr repo ====="
 
@@ -57,6 +57,8 @@ sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
 sudo apt install -y cpanminus
 sudo apt-get install -y nodejs
+sudo apt-get install -y tabix
+sudo apt-get install -y samtools
 
 #============================================================================================================#
 echo "===== install perl 5.20 ====="
@@ -131,9 +133,8 @@ sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
 # make sure crcmod is installed for copying files with gsutil
 sudo apt-get install -y gcc python-dev python-setuptools
-#sudo easy_install -U pip
-sudo pip3 uninstall -y crcmod
-sudo pip3 install -U crcmod
+sudo pip2.7 uninstall -y crcmod
+sudo pip2.7 install -U crcmod
 
 #==========================================================================================================#
 echo "===== init gsutil ====="
@@ -164,16 +165,10 @@ else
 fi
 
 #==========================================================================================================#
+echo
 echo "===== init utilities ====="
-#VEP no longer found at this address and needs to be installed manually
-# install tabix, bgzip, samtools - which may be needed for VEP and the loading pipeline
-#mkdir -p $SEQR_BIN_DIR
-#gsutil -m cp gs://hail-common/vep/htslib/* ${SEQR_BIN_DIR}/ \
-#    && gsutil -m cp gs://hail-common/vep/samtools ${SEQR_BIN_DIR}/ \
-#    && chmod a+rx  ${SEQR_BIN_DIR}/tabix ${SEQR_BIN_DIR}/bgzip \
-#    ${SEQR_BIN_DIR}/htsfile ${SEQR_BIN_DIR}/samtools
+echo
 
-#==========================================================================================================#
 #Update Postgres pg_hba.conf to change permission settings to make postgres work
 
 PG_HBA_PATH=$(find /etc/postgresql -name "pg_hba.conf")
@@ -203,12 +198,10 @@ sudo service postgresql restart
 echo
 echo "==== Install data loading pipeline ===="
 echo
-##still buggy
-##./local_install.sh: line 209: cpanm: command not found
+
 ##cp: cannot create regular file '/data/seqr/spark-2.0.2-bin-hadoop2.7/jars/': No such file or directory [thought this should be in seqr bin??]
 # download and install VEP - steps based on gs://hail-common/vep/vep/GRCh37/vep85-GRCh37-init.sh and gs://hail-common/vep/vep/GRCh38/vep85-GRCh38-init.sh
-#wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm && chmod +x cpanm
-#sudo chown -R $USER ~/.cpanm/  # make sure the user owns .cpanm
+
 # VEP dependencies
 cpanm --sudo --notest Set::IntervalTree
 cpanm --sudo --notest PerlIO::gzip
@@ -224,7 +217,7 @@ sudo cp ${SEQR_DIR}/hail_elasticsearch_pipelines/hail_builds/v01/gcs-connector-1
 sudp cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
 
 ##VEP no longer at this address so this either needs to be fixed or installed manually
-#mkdir -p ${SEQR_DIR}/vep/loftee_data_grch37 ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
+#mkdir -p ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
 #sudo ln -s ${SEQR_DIR}/vep /vep
 #sudo chmod -R 777 /vep
 
@@ -240,11 +233,6 @@ then
 fi
 
 
-#[ ! -d /vep/loftee_data_grch37/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh37/loftee_data /vep/loftee_data_grch37
-#[ ! -d /vep/loftee_data_grch38/loftee_data ] && gsutil -m cp -n -r gs://hail-common/vep/vep/GRCh38/loftee_data /vep/loftee_data_grch38
-#[ ! -d /vep/homo_sapiens/85_GRCh37 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh37 /vep/homo_sapiens
-#[ ! -d /vep/homo_sapiens/85_GRCh38 ] && gsutil -m cp -n -r gs://hail-common/vep/vep/homo_sapiens/85_GRCh38 /vep/homo_sapiens
-
 #if [ ! -f /vep/variant_effect_predictor ]; then
 #    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
 #    gsutil -m cp -n -r gs://hail-common/vep/vep/Plugins /vep
@@ -258,10 +246,6 @@ fi
 #    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh37_vcf.sh /vep/run_hail_vep85_GRCh37_vcf.sh
 #    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh38_vcf.sh /vep/run_hail_vep85_GRCh38_vcf.sh
 #    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/1var.vcf /vep/1var.vcf
-
-    # (re)create the fasta index VEP uses
-#    rm /vep/homo_sapiens/85_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.index
-#   bash /vep/run_hail_vep85_GRCh37_vcf.sh /vep/1var.vcf
 
     # (re)create the fasta index VEP uses
 #    rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
