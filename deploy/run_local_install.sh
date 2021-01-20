@@ -15,7 +15,7 @@ echo "==== Clone the seqr repo ====="
 cd ${SEQR_INSTALL_BASE}
 export SEQR_BRANCH=master
 git clone --recursive https://github.com/SarahBeecroft/seqr.git
-cd seqr/
+cd $SEQR_DIR
 git checkout $SEQR_BRANCH
 mkdir -p $SEQR_BIN_DIR
 #==========================================================================================================#
