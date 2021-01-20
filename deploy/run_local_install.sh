@@ -221,15 +221,15 @@ then
 fi
 
 # download full reference data set for  GRCh38
-if [[ -d ${SEQR_DIR}/data/seqr-reference-data/GRCh38 ]]
-then
-    echo 'GRCh38 data seems to exist already' 
-else
-    mkdir -p ${SEQR_DIR}/data/seqr-reference-data/GRCh38
-    cd ${SEQR_DIR}/data/seqr-reference-data/GRCh38
-    gsutil -m cp -r gs://seqr-reference-data/GRCh38/all_reference_data/combined_reference_data_grch38.ht .
-    gsutil -m cp -r gs://seqr-reference-data/GRCh38/clinvar/clinvar.GRCh38.2020-06-15.ht 
-fi
+#if [[ -d ${SEQR_DIR}/data/seqr-reference-data/GRCh38 ]]
+#then
+#    echo 'GRCh38 data seems to exist already' 
+#else
+#    mkdir -p ${SEQR_DIR}/data/seqr-reference-data/GRCh38
+#    cd ${SEQR_DIR}/data/seqr-reference-data/GRCh38
+#    gsutil -m cp -r gs://seqr-reference-data/GRCh38/all_reference_data/combined_reference_data_grch38.ht .
+#    gsutil -m cp -r gs://seqr-reference-data/GRCh38/clinvar/clinvar.GRCh38.2020-06-15.ht 
+#fi
 
 #if [ ! -f /vep/variant_effect_predictor ]; then
 #    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
