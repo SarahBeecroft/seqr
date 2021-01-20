@@ -2,13 +2,13 @@
 
 SEQR_INSTALL_BASE='/data'
 SEQR_DIR='/data/seqr'
-SEQR_BIN_DIR=${SEQR_DIR}'/../bin'
+SEQR_BIN_DIR=${SEQR_DIR}'/data/seqr/bin'
 SPARK_VERSION="spark-2.0.2-bin-hadoop2.7"
 KIBANA_VERSION=7.6.0
 KIBANA_PLATFORM="linux"
 IP_ADDRESS=$(curl ifconfig.me)
 PLATFORM='ubuntu'
-#based partly on https://github.com/leklab/broad-software-notes/blob/ec3f0ade906c4aec067bbf51455b34228d9fd4ae/seqr_installation_ubuntu16_vm.md
+
 #==========================================================================================================#
 echo "==== Clone the seqr repo ====="
 
@@ -25,7 +25,7 @@ git checkout $SEQR_BRANCH
 #Create a bash variable, add it to ~/.bash_rc and run source ~/.bashrc
 
 export SEQR_DIR=/data/seqr
-export SEQR_BIN_DIR=${SEQR_DIR}'/../bin'
+export SEQR_BIN_DIR='/data/seqr/bin'
 export SPARK_HOME=${SEQR_BIN_DIR}'/'${SPARK_VERSION}
 cat <(echo 'export SEQR_DIR='${SEQR_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
 cat <(echo 'export SEQR_BIN_DIR='${SEQR_BIN_DIR}) ~/.bashrc > /tmp/bashrc && mv /tmp/bashrc ~/.bashrc
@@ -64,7 +64,7 @@ sudo apt-get install -y samtools
 echo "===== install perl 5.20 ====="
 
 # this is used by the seqr pedigree image-generating script and by the variant effect predictor (VEP) which is run within hail 0.1
-# the VEP hail 0.1 integration in particular depends on this specific version of VEP
+# the VEP hail 0.1 integration in particular depends on this specific version of VEP (85)
 
 if [[ -d perl-5.20.3 ]]
 then
@@ -88,20 +88,12 @@ sudo apt-get install -y \
     libgtk2.0-dev \
     libpango1.0-dev
 
-#wget -nv https://raw.github.com/miyagawa/cpanminus/master/cpanm -O cpanm \
-#    && chmod +x ./cpanm \
-#    && 
 sudo cpanm --notest \
     Cairo \
     DBI \
     Gtk2 \
     Tk \
     Sort::Naturally
-
-##This no longer works. I am trying now to use sudo apt-get install nodejs instead, but this gives you the latest version (currently 10).
-#This has been added to the general dependency install section
-#curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-#    && sudo apt-get install -y nodejs
 
 #==========================================================================================================#
 echo "===== Install spark ===="
@@ -151,7 +143,6 @@ if [ -e "/.config/service-account-key.json" ]; then
     cp /.config/boto ~/.boto
     sudo mv /etc/boto.cfg /etc/boto.cfg.aside  # /etc/boto.cfg leads to "ImportError: No module named google_compute_engine" on gcloud Ubuntu VMs, so move it out of the way
 fi
-
 
 # check that gsutil works and is able to access gs://hail-common/
 GSUTIL_TEST="gsutil ls gs://hail-common/"
@@ -214,17 +205,17 @@ cpanm --sudo --notest List::MoreUtils
 
 # install google storage connector which allows hail to access vds's in google buckets without downloading them first
 sudo cp ${SEQR_DIR}/hail_elasticsearch_pipelines/hail_builds/v01/gcs-connector-1.6.10-hadoop2.jar ${SPARK_HOME}/jars/
-sudp cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
+sudo mkdir -p ${SPARK_HOME}/conf/
+sudo cp ${SEQR_DIR}/deploy/docker/pipeline-runner/config/core-site.xml ${SPARK_HOME}/conf/
 
-##VEP no longer at this address so this either needs to be fixed or installed manually
-#mkdir -p ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
-#sudo ln -s ${SEQR_DIR}/vep /vep
-#sudo chmod -R 777 /vep
+mkdir -p ${SEQR_DIR}/vep/loftee_data_grch38 ${SEQR_DIR}/vep/homo_sapiens
+sudo ln -s ${SEQR_DIR}/vep /vep
+sudo chmod -R 777 /vep
 
-#if [ ! -f /usr/local/bin/perl ]
-#then
-#    sudo ln -s /usr/bin/perl /usr/local/bin/perl
-#fi
+if [ ! -f /usr/local/bin/perl ]
+then
+    sudo ln -s /usr/bin/perl /usr/local/bin/perl
+fi
 
 # copy large data files
 if [ -f /etc/boto.cfg ]
@@ -232,6 +223,16 @@ then
     sudo mv /etc/boto.cfg /etc/boto.cfg.aside  # /etc/boto.cfg leads to "ImportError: No module named google_compute_engine" on gcloud Ubuntu VMs, so move it out of the way
 fi
 
+# download full reference data set for  GRCh38
+if [[ -d ${SEQR_DIR}/data/seqr-reference-data/GRCh38 ]]
+then
+    echo 'GRCh38 data seems to exist already' 
+else
+    mkdir -p ${SEQR_DIR}/data/seqr-reference-data/GRCh38
+    cd ${SEQR_DIR}/data/seqr-reference-data/GRCh38
+    gsutil -m cp -r gs://seqr-reference-data/GRCh38/all_reference_data/combined_reference_data_grch38.ht .
+    gsutil -m cp -r gs://seqr-reference-data/GRCh38/clinvar/clinvar.GRCh38.2020-06-15.ht 
+fi
 
 #if [ ! -f /vep/variant_effect_predictor ]; then
 #    gsutil -m cp -n -r gs://hail-common/vep/vep/ensembl-tools-release-85 /vep
@@ -239,18 +240,18 @@ fi
 #    ln -s /vep/ensembl-tools-release-85/scripts/variant_effect_predictor /vep/variant_effect_predictor
 #fi
 
-#if [ ! -f /vep/1var.vcf ]; then
-#    git clone https://github.com/konradjk/loftee.git /vep/loftee
-#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch38.properties /vep/vep-gcloud-grch38.properties
-#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch37.properties /vep/vep-gcloud-grch37.properties
-#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh37_vcf.sh /vep/run_hail_vep85_GRCh37_vcf.sh
-#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh38_vcf.sh /vep/run_hail_vep85_GRCh38_vcf.sh
-#    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/1var.vcf /vep/1var.vcf
+if [ ! -f /vep/1var.vcf ]; then
+    git clone https://github.com/konradjk/loftee.git /vep/loftee
+    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch38.properties /vep/vep-gcloud-grch38.properties
+    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/vep-gcloud-grch37.properties /vep/vep-gcloud-grch37.properties
+    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh37_vcf.sh /vep/run_hail_vep85_GRCh37_vcf.sh
+    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/run_hail_vep85_GRCh38_vcf.sh /vep/run_hail_vep85_GRCh38_vcf.sh
+    cp ${SEQR_DIR}/hail_elasticsearch_pipelines/gcloud_dataproc/vep_init/1var.vcf /vep/1var.vcf
 
     # (re)create the fasta index VEP uses
-#    rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
-#    bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
-#fi
+    rm /vep/homo_sapiens/85_GRCh38/Homo_sapiens.GRCh38.dna.primary_assembly.fa.index
+    bash /vep/run_hail_vep85_GRCh38_vcf.sh /vep/1var.vcf
+fi
 
 #==========================================================================================================#
 
@@ -457,4 +458,4 @@ chmod 777 start_server.sh
 
 #===========================================================================================================#
 echo "Check that seqr is working by going to http://"$IP_ADDRESS":8000"
-#echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
+echo "PhenoTips should be available at http://"$IP_ADDRESS":8080"
