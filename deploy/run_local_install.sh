@@ -326,14 +326,14 @@ echo
 echo "==== Install and start kibana ====="
 echo
 
-if [[ -d ${SEQR_DIR}/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64 ]]
+if [[ -d ${SEQR_DIR}/kibana-7.10.2-darwin-x86_64 ]]
 then
     echo 'kibana dir seems to exist already' 
 else
     cd ${SEQR_DIR}
-    wget -nv https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
-    tar xzf kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
-    rm kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64.tar.gz
+    curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.10.2-darwin-x86_64.tar.gz
+    tar -xzf kibana-7.10.2-darwin-x86_64.tar.gz
+    cd kibana-7.10.2-darwin-x86_64/
 fi
 
 cd ${SEQR_DIR}/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64
