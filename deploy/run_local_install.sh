@@ -405,7 +405,6 @@ else
     https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/ (phenotips-standalone-VER.zip)
     This should be placed in ${SEQR_DIR}
     '''
-    exit
 fi
 
 #note: the below error is benign and phenotips should work regardless
