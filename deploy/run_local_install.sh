@@ -43,6 +43,7 @@ sudo snap install google-cloud-sdk --classic
 sudo apt-get install -y python
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python2.7 get-pip.py
+rm get-pip.py
 sudo -H pip2.7 install --upgrade pip
 sudo -H pip2.7 install -r ${SEQR_DIR}/requirements.txt
 sudo pip2.7 install --ignore-installed decorator==4.2.1
