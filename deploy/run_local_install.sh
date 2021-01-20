@@ -254,6 +254,7 @@ fi
 #==========================================================================================================#
 echo "==== Install elasticsearch ===="
 
+cd ${SEQR_DIR}
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
 tar -xzf elasticsearch-7.10.2-linux-x86_64.tar.gz
 rm elasticsearch-7.10.2-linux-x86_64.tar.gz
