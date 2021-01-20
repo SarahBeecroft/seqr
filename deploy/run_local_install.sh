@@ -254,7 +254,10 @@ fi
 #==========================================================================================================#
 echo "==== Install elasticsearch ===="
 ##TODO
-##Automate editing of seqr/elasticsearch/config/elasticsearch.yml to include the line " network.host: "localhost" "
+##Automate editing of seqr/elasticsearch/config/elasticsearch.yml to include the lines 
+# network.host: 0.0.0.0
+# node.name: node-1
+# discovery.type: single-node
 ##re-introduce the logic here to prevent unnecessary downloads
 cd ${SEQR_DIR}
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
@@ -314,7 +317,7 @@ cd '$(pwd)'
 LOG_FILE=$(pwd)/elasticsearch.log
 (ES_JAVA_OPTS="-Xms3900m -Xmx3900m" nohup ./bin/elasticsearch -E network.host=0.0.0.0 >& ${LOG_FILE}) &
 sleep 7;
-curl http://localhost:9200
+curl -X GET "localhost:9200"
 echo "Elasticsearch started in background. See ${LOG_FILE}"
 ' | tee start_elasticsearch.sh
 chmod 777 ./start_elasticsearch.sh
