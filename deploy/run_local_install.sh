@@ -254,7 +254,7 @@ fi
 #==========================================================================================================#
 echo "==== Install elasticsearch ===="
 
-if [[ -d ${SEQR_DIR}/elasticsearch-7.10.2]
+if [[ -d ${SEQR_DIR}/elasticsearch-7.10.2]]
 then
     echo 'elasticsearch seems to exist already' 
 else
