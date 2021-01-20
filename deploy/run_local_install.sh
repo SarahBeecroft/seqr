@@ -253,7 +253,9 @@ fi
 
 #==========================================================================================================#
 echo "==== Install elasticsearch ===="
-
+##TODO
+##Automate editing of seqr/elasticsearch/config/elasticsearch.yml to include the line " network.host: "localhost" "
+##re-introduce the logic here to prevent unnecessary downloads
 cd ${SEQR_DIR}
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
 tar -xzf elasticsearch-7.10.2-linux-x86_64.tar.gz
@@ -326,18 +328,19 @@ echo
 echo "==== Install and start kibana ====="
 echo
 
-if [[ -d ${SEQR_DIR}/kibana-7.10.2-darwin-x86_64 ]]
+##TODO figue out why kibana still wont connect to localhost:9200
+
+if [[ -d ${SEQR_DIR}/kibana-7.10.2-linux-x86_64 ]]
 then
     echo 'kibana dir seems to exist already' 
 else
     cd ${SEQR_DIR}
     curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.10.2-darwin-x86_64.tar.gz
-    tar -xzf kibana-7.10.2-darwin-x86_64.tar.gz
-    cd kibana-7.10.2-darwin-x86_64/
+    tar -xzf kibana-7.10.2-linux-x86_64.tar.gz
+    cd kibana-7.10.2-linux-x86_64/
 fi
 
-cd ${SEQR_DIR}/kibana-${KIBANA_VERSION}-${KIBANA_PLATFORM}-x86_64
-
+cd kibana-7.10.2-linux-x86_64/
 echo '
 cd '$(pwd)'
 LOG_FILE=$(pwd)/kibana.log
