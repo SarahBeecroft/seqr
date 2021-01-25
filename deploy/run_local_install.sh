@@ -258,6 +258,11 @@ echo "==== Install elasticsearch ===="
 # network.host: 0.0.0.0
 # node.name: node-1
 # discovery.type: single-node
+
+###to kill process if already running
+##ps aux | grep 'elastic'
+##kil <pid>
+
 ##re-introduce the logic here to prevent unnecessary downloads
 cd ${SEQR_DIR}
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
