@@ -60,17 +60,7 @@ A project in seqr represents a group of collaborators working together on one or
 
 #### TO DO: Instructions on annotating and loading datasets into seqr. look at https://github.com/SarahBeecroft/broad-software-notes/blob/master/seqr_installation_ubuntu16_vm.md
 
-#### Adding data to your project
-Now that the dataset is loaded into elasticsearch, it can be added to the project:
-
-1. Go to the project page
-2. Click on Edit Datasets
-3. Enter the index name that the pipeline printed out when it completed, and submit the form.
-
-After this you can click "Variant Search" for each family, or "Gene Search" to search across families.
-
-
-Annotating and loading VCF callsets - option #2: annotate and load on-prem
+#### Annotating and loading VCF callsets - option #2: annotate and load on-prem
 
 Annotating a callset with VEP and reference data can be very slow - as slow as several variants / sec per CPU, so although it is possible to run the pipeline on a single machine, it is recommended to use multiple machines.
 
@@ -78,10 +68,11 @@ To annotate a callset on-prem, first download VEP and other reference data. If a
 
 The total download size is ~180Gb per genome version.
 
-#Loading your data into seqr (Beta) from https://github.com/broadinstitute/seqr/blob/master/deploy/LOCAL_INSTALL.md#annotating-and-loading-vcf-callsets---option-2-annotate-and-load-on-prem
+#### Loading your data into seqr (Beta) from https://github.com/broadinstitute/seqr/blob/master/deploy/LOCAL_INSTALL.md#annotating-and-loading-vcf-callsets---option-2-annotate-and-load-on-prem
 
+```
 # authenticate to your gcloud account so you can download public reference data
-gcloud auth application-default login  
+gcloud auth application-default login
 
 # download VEP reference data
 mkdir -p ${SEQR_DIR}/data/vep_data/homo_sapiens
@@ -89,10 +80,6 @@ cd ${SEQR_DIR}/data/vep_data
 curl -L http://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/homo_sapiens_vep_99_GRCh38.tar.gz | tar xzf - &
 
 #  download loftee reference data
-mkdir -p ${SEQR_DIR}/data/vep_data/loftee_data/GRCh37/
-cd ${SEQR_DIR}/data/vep_data/loftee_data/GRCh37/
-gsutil cat gs://seqr-reference-data/vep_data/loftee-beta/GRCh37.tar | tar xf  - & 
-
 mkdir -p ${SEQR_DIR}/data/vep_data/loftee_data/GRCh38/
 cd ${SEQR_DIR}/data/vep_data/loftee_data/GRCh38/
 gsutil cat gs://seqr-reference-data/vep_data/loftee-beta/GRCh38.tar | tar xf  - & 
@@ -149,14 +136,26 @@ To run annotation and database loading as 2 separate steps, use the following co
         --genome-version 38 \
         --es-host elasticsearch  \
         --es-index your-callset-name
+```
 
-Adding a loaded dataset to a seqr project.
+#### Adding a loaded dataset to a seqr project.
 
 After the dataset is loaded into elasticsearch, it can be added to your seqr project with these steps:
-
+```
     Go to the project page
     Click on Edit Datasets
     Enter the elasticsearch index name (set via the --es-index arg at loading time), and submit the form.
+```
+
+#### Adding data to your project
+Now that the dataset is loaded into elasticsearch, it can be added to the project:
+
+1. Go to the project page
+2. Click on Edit Datasets
+3. Enter the index name that the pipeline printed out when it completed, and submit the form.
+
+After this you can click "Variant Search" for each family, or "Gene Search" to search across families.
+
 
 #### (optional): Enable read viewing in the browser
 
