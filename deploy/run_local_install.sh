@@ -107,6 +107,8 @@ else
     tar xzf ${SPARK_VERSION}.tgz
     rm ${SPARK_VERSION}.tgz
 fi
+
+
 #==========================================================================================================#
 echo " ==== Install gcloud sdk ====="
 
@@ -125,6 +127,7 @@ sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 sudo apt-get install -y gcc python-dev python-setuptools
 sudo pip2.7 uninstall -y crcmod
 sudo pip2.7 install -U crcmod
+
 
 #==========================================================================================================#
 echo "===== init gsutil ====="
@@ -216,10 +219,10 @@ then
 fi
 
 # copy large data files
-if [ -f /etc/boto.cfg ]
-then
-    sudo mv /etc/boto.cfg /etc/boto.cfg.aside  # /etc/boto.cfg leads to "ImportError: No module named google_compute_engine" on gcloud Ubuntu VMs, so move it out of the way
-fi
+#if [ -f /etc/boto.cfg ]
+#then
+#    sudo mv /etc/boto.cfg /etc/boto.cfg.aside  # /etc/boto.cfg leads to "ImportError: No module named google_compute_engine" on gcloud Ubuntu VMs, so move it out of the way
+#fi
 
 # download full reference data set for  GRCh38
 #if [[ -d ${SEQR_DIR}/data/seqr-reference-data/GRCh38 ]]
@@ -267,10 +270,16 @@ echo "==== Install elasticsearch ===="
 ##netstat -tlnp | grep 5601 (this one is for kibana). you can then 'kill -9 <pid>'
 
 ##re-introduce the logic here to prevent unnecessary downloads
-cd ${SEQR_DIR}
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
-tar -xzf elasticsearch-7.10.2-linux-x86_64.tar.gz
-rm elasticsearch-7.10.2-linux-x86_64.tar.gz
+
+if [[ -d elasticsearch-7.10.2 ]]
+then
+    echo 'elasticsearch seems to exist already' 
+else
+    cd ${SEQR_DIR}
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
+    tar -xzf elasticsearch-7.10.2-linux-x86_64.tar.gz
+    rm elasticsearch-7.10.2-linux-x86_64.tar.gz
+fi
 
 echo "==== Adjust system settings for elasticsearch ====="
 
@@ -318,21 +327,23 @@ sudo prlimit --pid $$ --nofile=65536
 #==========================================================================================================#
 echo "==== Create start_elasticsearch.sh ====="
 
-cd ${SEQR_DIR}/elasticsearch-7.10.2/ 
-
-echo '
-cd '$(pwd)'
-LOG_FILE=$(pwd)/elasticsearch.log
-(ES_JAVA_OPTS="-Xms3900m -Xmx3900m" nohup ./bin/elasticsearch -E network.host=0.0.0.0 >& ${LOG_FILE}) &
-sleep 17;
-curl -X GET "localhost:9200"
-echo "Elasticsearch started in background. See ${LOG_FILE}"
-' | tee start_elasticsearch.sh
-chmod 777 ./start_elasticsearch.sh
+if [[ -f ${SEQR_DIR}/elasticsearch-7.10.2/start_elasticsearch.sh]]
+then
+    echo 'start_elasticsearch.sh already exists'
+else
+    cd ${SEQR_DIR}/elasticsearch-7.10.2/ 
+    echo '
+    cd '$(pwd)'
+    LOG_FILE=$(pwd)/elasticsearch.log
+    (ES_JAVA_OPTS="-Xms3900m -Xmx3900m" nohup ./bin/elasticsearch -E network.host=0.0.0.0 >& ${LOG_FILE}) &
+    sleep 17;
+    curl -X GET "localhost:9200"
+    echo "Elasticsearch started in background. See ${LOG_FILE}"
+    ' | tee start_elasticsearch.sh
+    chmod 777 ./start_elasticsearch.sh
+fi
 
 ./start_elasticsearch.sh
-
-cd ${SEQR_DIR}
 
 #==========================================================================================================#
 echo
@@ -351,19 +362,21 @@ else
     cd kibana-7.10.2-linux-x86_64/
 fi
 
-cd kibana-7.10.2-linux-x86_64/
-echo '
-cd '$(pwd)'
-LOG_FILE=$(pwd)/kibana.log
-(nohup ./bin/kibana >& ${LOG_FILE}) &
-echo "Kibana started in background. See ${LOG_FILE}"
-' | tee start_kibana.sh
-
-chmod 777 ./start_kibana.sh
+if [[ -f $SEQR_DIR/kibana-7.10.2-linux-x86_64/start_kibana.sh ]]
+then
+    echo 'start_kibana.sh already exists'
+else
+    cd $SEQR_DIR/kibana-7.10.2-linux-x86_64/
+    echo '
+    cd '$(pwd)'
+    LOG_FILE=$(pwd)/kibana.log
+    (nohup ./bin/kibana >& ${LOG_FILE}) &
+    echo "Kibana started in background. See ${LOG_FILE}"
+    ' | tee start_kibana.sh
+    chmod 777 ./start_kibana.sh
+fi
 
 ./start_kibana.sh
-
-cd ${SEQR_DIR}
 
 #==========================================================================================================#
 echo
@@ -385,16 +398,20 @@ else
     sudo make install
 fi
 
-echo 'cd '$(pwd)'
-LOG_FILE=$(pwd)/redis.log
-(nohup redis-server ${SEQR_DIR}/deploy/docker/redis/redis.conf >& ${LOG_FILE}) &
-echo "redis started in background on port 6379. See ${LOG_FILE}"
-' | tee start_redis.sh
-
-chmod 777 ./start_redis.sh
+if [[ -f $SEQR_DIR/redis/start_redis.sh ]]
+then
+    echo 'start_redis.sh already exists'
+else
+    cd $SEQR_DIR/redis
+    echo 'cd '$(pwd)'
+    LOG_FILE=$(pwd)/redis.log
+    (nohup redis-server ${SEQR_DIR}/deploy/docker/redis/redis.conf >& ${LOG_FILE}) &
+    echo "redis started in background on port 6379. See ${LOG_FILE}"
+    ' | tee start_redis.sh
+    chmod 777 ./start_redis.sh
+fi
 
 ./start_redis.sh
-
 cd ${SEQR_DIR}
 
 #==========================================================================================================#
@@ -413,12 +430,12 @@ then
     chmod 777 start_phenotips.sh
     ./start_phenotips.sh
 else
-    echo '''
+    echo '
     ***** READ ME *****
     YOU NEED TO DOWNLOAD PHENOTIPS FROM:
     https://nexus.phenotips.org/nexus/content/repositories/releases/org/phenotips/phenotips-standalone/ (phenotips-standalone-VER.zip)
     This should be placed in ${SEQR_DIR}
-    '''
+    '
 fi
 
 #note: the below error is benign and phenotips should work regardless
@@ -429,10 +446,6 @@ fi
 echo
 echo "==== Installing seqr ===="
 echo
-
-cd ${SEQR_DIR}/
-git pull
-cp deploy/docker/seqr/config/gunicorn_config.py ${SEQR_DIR}
 
 # init seqr db
 psql -U postgres postgres -c "create database seqrdb"
@@ -447,22 +460,30 @@ python -u manage.py loaddata variant_tag_types
 python -u manage.py loaddata variant_searches
 
 # download and restore gene reference data
-REFERENCE_DATA_BACKUP_FILE=gene_reference_data_backup.gz
-wget -N https://storage.googleapis.com/seqr-reference-data/gene_reference_data_backup.gz -O ${REFERENCE_DATA_BACKUP_FILE}
-
-psql -U postgres reference_data_db <  <(gunzip -c ${REFERENCE_DATA_BACKUP_FILE})
-rm ${REFERENCE_DATA_BACKUP_FILE}
+if [[ -f ${SEQR_DIR}/gene_reference_data_backup.gz]]
+then
+    echo 'gene_reference_data_backup.gz already exists'
+else
+    REFERENCE_DATA_BACKUP_FILE=gene_reference_data_backup.gz
+    wget -N https://storage.googleapis.com/seqr-reference-data/gene_reference_data_backup.gz -O ${REFERENCE_DATA_BACKUP_FILE}
+    psql -U postgres reference_data_db <  <(gunzip -c ${REFERENCE_DATA_BACKUP_FILE})
+    rm ${REFERENCE_DATA_BACKUP_FILE}
+fi
 
 # start gunicorn server
 GUNICORN_WORKER_THREADS=4
 
-echo 'cd '${SEQR_DIR}'
-LOG_FILE=$(pwd)/gunicorn.log
-nohup gunicorn -w '${GUNICORN_WORKER_THREADS}' -c gunicorn_config.py wsgi:application --bind 0.0.0.0:8000 >& ${LOG_FILE} &
-echo "gunicorn started in background. See ${LOG_FILE}"
-' > start_server.sh
-
-chmod 777 start_server.sh
+if [[ -f ${SEQR_DIR}/start_server.sh ]]
+then
+    echo 'gene_reference_data_backup.gz already exists'
+else
+    echo 'cd '${SEQR_DIR}'
+    LOG_FILE=$(pwd)/gunicorn.log
+    nohup gunicorn -w '${GUNICORN_WORKER_THREADS}' -c gunicorn_config.py wsgi:application --bind 0.0.0.0:8000 >& ${LOG_FILE} &
+    echo "gunicorn started in background. See ${LOG_FILE}"
+    ' > start_server.sh
+    chmod 777 start_server.sh
+fi
 
 ./start_server.sh
 
