@@ -137,8 +137,50 @@ To run annotation and database loading as 2 separate steps, use the following co
         --es-host elasticsearch  \
         --es-index your-callset-name
 ```
+#### OR use this older guide?
 
-#### Adding a loaded dataset to a seqr project.
+```
+# Once vep and the plugins have been installed, you can use the following command to annotate your VCF file (here called my_data.vcf.gz):
+perl ./vep/ensembl-tools-release-85/scripts/variant_effect_predictor/variant_effect_predictor.pl --everything --vcf --allele_number --no_stats --cache --offline --dir ./vep_cache/ --force_overwrite --cache_version 81 --fasta ./vep_cache/homo_sapiens/81_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa --assembly GRCh37 --tabix --plugin LoF,human_ancestor_fa:./loftee_data/human_ancestor.fa.gz,filter_position:0.05,min_intron_size:15 --plugin dbNSFP,./reference_data/dbNSFP/dbNSFPv2.9.gz,Polyphen2_HVAR_pred,CADD_phred,SIFT_pred,FATHMM_pred,MutationTaster_pred,MetaSVM_pred -i my_data.vcf.gz -o my_data.vep.vcf.gz
+
+    Once you have an annotated VCF and a .fam/.ped file describing the pedigree of your samples, load it
+
+# Add families and individuals to the project, could also be a '.ped' file instead of '.fam'
+./manage.py add_individuals_to_project test_project --ped 'test_project_samples.fam'   
+
+# I am going to test this out using some data Monkol got from 1k exomes that he 
+# already processed through VEP, I placed it in a new folder i created 
+# mkdir seqr/data/projects/1kg_project <-- 1kg.ped + 1kg.vep_minimal.vcf.gz
+./manage.py add_project 1kg_project
+./manage.py add_individuals_to_project 1kg_project --ped '/home/<user>/seqr/data/projects/1kg_project/1kg.ped'
+
+    Now set the VCF locations, doesn't load the data yet. Make sure to use VEP generated VCF
+
+./manage.py add_vcf_to_project test_project my_data.vep.vcf.gz
+
+# Again, my personal command: 
+./manage.py add_vcf_to_project test_project /home/<user>/seqr/data/projects/1kg_project/1kg.vep_minimal.vcf.gz
+
+    This step actually loads the VCF data and takes a while
+
+./manage.py load_project test_project
+
+# Mine:
+./manage.py load_project 1kg_project
+
+    Load an additional mongodb collection that is used for gene search - this also takes a while
+
+./manage.py load_project_datastore test_project
+
+# Mine:
+./manage.py load_project_datastore 1kg_project  
+
+For other seqr options:
+
+./manage.py help
+
+```
+#### Adding a loaded dataset to a seqr project
 
 After the dataset is loaded into elasticsearch, it can be added to your seqr project with these steps:
 ```
