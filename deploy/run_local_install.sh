@@ -263,6 +263,9 @@ echo "==== Install elasticsearch ===="
 ##ps aux | grep 'elastic'
 ##kil <pid>
 
+##TO check if process is already running on a port
+##netstat -tlnp | grep 5601 (this one is for kibana). you can then 'kill -9 <pid>'
+
 ##re-introduce the logic here to prevent unnecessary downloads
 cd ${SEQR_DIR}
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-linux-x86_64.tar.gz
