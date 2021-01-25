@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+##Written by Sarah Beecroft 25/1/2021. Works on nimbus ubuntu image V20 (maybe some minor bugs). 
 
 SEQR_INSTALL_BASE='/data'
 SEQR_DIR='/data/seqr'
@@ -18,6 +19,7 @@ git clone --recursive https://github.com/SarahBeecroft/seqr.git
 cd $SEQR_DIR
 git checkout $SEQR_BRANCH
 mkdir -p $SEQR_BIN_DIR
+
 #==========================================================================================================#
 #Create a bash variable, add it to ~/.bash_rc and run source ~/.bashrc
 
@@ -48,9 +50,7 @@ sudo -H pip2.7 install --upgrade pip
 sudo -H pip2.7 install -r ${SEQR_DIR}/requirements.txt
 sudo pip2.7 install --ignore-installed decorator==4.2.1
 sudo pip2.7 install --upgrade pip jupyter
-#sudo apt-get install -y python-psycopg2 ##think this is redundant to what is in requirements.txt. might have been needed to allow install of libpq-dev on ubuntu 18
 sudo apt-get install -y libpq-dev
-#sudo apt remove -y python-psycopg2
 sudo apt-get install -y postgresql postgresql-contrib
 sudo apt-get install -y mongodb
 sudo apt install -y cpanminus
@@ -191,7 +191,6 @@ echo
 echo "==== Install data loading pipeline ===="
 echo
 
-##cp: cannot create regular file '/data/seqr/spark-2.0.2-bin-hadoop2.7/jars/': No such file or directory [thought this should be in seqr bin??]
 # download and install VEP - steps based on gs://hail-common/vep/vep/GRCh37/vep85-GRCh37-init.sh and gs://hail-common/vep/vep/GRCh38/vep85-GRCh38-init.sh
 
 # VEP dependencies
@@ -269,7 +268,6 @@ echo "==== Install elasticsearch ===="
 ##TO check if process is already running on a port
 ##netstat -tlnp | grep 5601 (this one is for kibana). you can then 'kill -9 <pid>'
 
-##re-introduce the logic here to prevent unnecessary downloads
 
 if [[ -d elasticsearch-7.10.2 ]]
 then
@@ -349,8 +347,6 @@ fi
 echo
 echo "==== Install and start kibana ====="
 echo
-
-##TODO figue out why kibana still wont connect to localhost:9200
 
 if [[ -d ${SEQR_DIR}/kibana-7.10.2-linux-x86_64 ]]
 then
